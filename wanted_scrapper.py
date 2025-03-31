@@ -11,10 +11,15 @@ class Web_scrapper():
         self.keywords = keywords
         self.jobs_db = []  
     
-    def get_keyword(self):
-        for keyword in self.keywords:
+    def get_keyword(self, keyword):
+
+        if isinstance(keyword, str):
             self.get_job_data(keyword)
-            self.create_excel_file(keyword)
+            # self.create_excel_file(keyword)
+        elif isinstance(keyword, list): 
+            for keyword in self.keywords:
+                self.get_job_data(keyword)
+                # self.create_excel_file(keyword)
 
     def get_job_data(self, keyword): 
 
@@ -51,11 +56,11 @@ class Web_scrapper():
 
         except Exception as e:
             print(f"Error: {e}")
-        finally:
-            pass
-            # browser.close() # browser 닫기
+        finally:   
+            browser.close() # browser 닫기
             # p.stop() # playwright 종료
-
+        return self.jobs_db
+    
     def create_excel_file(self, keyword):
         
         file = open(f"{keyword}.csv", "w", encoding="utf-8")
@@ -66,8 +71,8 @@ class Web_scrapper():
             writter.writerow(x.values())
         file.close()
     
-keywords = ["Python", "Java", "QA"]
-test = Web_scrapper(keywords)
-test.get_keyword()
+# keywords = "python"
+# test = Web_scrapper(keywords)
+# test.get_keyword(keywords)
 
 
