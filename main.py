@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, redirect, send_file
-import wanted_scrapper
+import wanted_scrapper as w
 
 app = Flask("__name__")
 
@@ -18,8 +18,7 @@ def search():
     if keyword in db:
         jobs = db[keyword]
     else : 
-        test = wanted_scrapper.Web_scrapper(keyword)
-        jobs = test.get_job_data(keyword)
+        jobs = w.get_job_data(keyword)
         db[keyword] = jobs
     return render_template("search.html", keyword=keyword, jobs=jobs)
 
@@ -30,7 +29,6 @@ def export():
         return redirect("/")
     if keyword not in db:
         return redirect(f"/search?keyword={keyword}")
-    test = wanted_scrapper.Web_scrapper(keyword)   
-    test.create_excel_file
+    w.create_excel_file(keyword)
     return send_file(f"{keyword}.csv", as_attachment=True)
 app.run(debug=True)

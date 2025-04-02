@@ -1,4 +1,4 @@
-import requests
+import requests, csv
 from bs4 import BeautifulSoup
 
 url = "https://weworkremotely.com/remote-full-time-jobs?page=1"
@@ -28,9 +28,16 @@ def get_pages(url):
     soup = BeautifulSoup(response.content, "html.parser")
     return len(soup.find("div", class_="pagination").find_all("span", class_="page"))
 
-total_pages = get_pages("https://weworkremotely.com/remote-full-time-jobs?page=1")
+def create_excel_file():
+    file = open(f"wework_fulltime.csv", "w", encoding="utf-8")
+    writer = csv.writer(file)
+    writer.writerow(["title", "region", "link"])
+    for job in all_jobs:
+        writer.writerow(job.values())
+    file.close()
+
+total_pages = get_pages(url)
 for x in range(total_pages):
     url = f"https://weworkremotely.com/remote-full-time-jobs?page={x+1}"
     scrape_page(url)
-
-print(len(all_jobs))
+create_excel_file()
